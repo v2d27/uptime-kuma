@@ -820,5 +820,12 @@
     "versionIs": "Version: {version}",
     "enableSSL": "Slå SSL/TLS til",
     "mariadbUseSSLHelptext": "Slå krypteret forbindelse til mod databasen. Påkrævet for de fleste cloud databaser.",
-    "mariadbCaCertificateLabel": "CA certifikat"
+    "mariadbCaCertificateLabel": "CA certifikat",
+    "Time range": "Tidsrum",
+    "customTimeRange": "Brugerdefineret tidsrum",
+    "Apply": "Anvend",
+    "invalidTimeRange": "Sluttidspunktet skal være efter starttidspunktet.",
+    "Degraded": "Forringet",
+    "days": "{n} dag | {n} dage",
+    "hours": "{n} time | {n} timer"
 }

@@ -1678,5 +1678,10 @@
     "milkySafetyTips": "Saugumo tikslais būtina nustatyti prieigos raktą",
     "smsgatewayUrlHelptext": "Jūsų SMS šliuzo bazinis URL be API kelio.",
     "smsgatewayTo": "Telefono numeris (-iai)",
-    "smsgatewayToHelptext": "Kableliais atskirtas gavėjų telefono numerių sąrašas tarptautiniu formatu (pvz., +15551234567)"
+    "smsgatewayToHelptext": "Kableliais atskirtas gavėjų telefono numerių sąrašas tarptautiniu formatu (pvz., +15551234567)",
+    "Time range": "Laiko intervalas",
+    "customTimeRange": "Pasirinktinis intervalas",
+    "Apply": "Taikyti",
+    "invalidTimeRange": "Pabaigos laikas turi būti vėlesnis už pradžios laiką.",
+    "Degraded": "Sutrikęs"
 }

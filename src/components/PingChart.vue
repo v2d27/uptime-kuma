@@ -1,26 +1,7 @@
 <template>
     <div>
         <div class="period-options">
-            <button
-                type="button"
-                class="btn btn-light dropdown-toggle btn-period-toggle"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-            >
-                {{ chartPeriodOptions[chartPeriodHrs] }}&nbsp;
-            </button>
-            <ul class="dropdown-menu dropdown-menu-end">
-                <li v-for="(item, key) in chartPeriodOptions" :key="key">
-                    <button
-                        type="button"
-                        class="dropdown-item"
-                        :class="{ active: chartPeriodHrs == key }"
-                        @click="chartPeriodHrs = key"
-                    >
-                        {{ item }}
-                    </button>
-                </li>
-            </ul>
+            <TimeRangeSelector v-model="chartPeriodHrs" />
         </div>
         <div class="chart-wrapper" :class="{ loading: loading }">
             <Line :data="chartData" :options="chartOptions" />
@@ -45,6 +26,7 @@ import {
 import "chartjs-adapter-dayjs-4";
 import { Line } from "vue-chartjs";
 import { UP, DOWN, PENDING, MAINTENANCE } from "../util.ts";
+import TimeRangeSelector from "./TimeRangeSelector.vue";
 
 Chart.register(
     LineController,
@@ -60,7 +42,10 @@ Chart.register(
 );
 
 export default {
-    components: { Line },
+    components: {
+        Line,
+        TimeRangeSelector,
+    },
     props: {
         /** ID of monitor */
         monitorId: {
@@ -72,19 +57,13 @@ export default {
         return {
             loading: false,
 
-            // Time period for the chart to display, in hours
+            // Time period for the chart to display, in hours, or { from, to } for a custom range
             // Initial value is 0 as a workaround for triggering a data fetch on created()
             chartPeriodHrs: "0",
 
-            chartPeriodOptions: {
-                0: this.$t("recent"),
-                3: "3h",
-                6: "6h",
-                24: "24h",
-                168: "1w",
-            },
-
             chartRawData: null,
+            // Granularity of chartRawData: "minute", "hour" or "day"
+            chartRawDataType: null,
             chartDataFetchInterval: null,
         };
     },
@@ -131,8 +110,12 @@ export default {
                             displayFormats: {
                                 minute: "HH:mm",
                                 hour: "MM-DD HH:mm",
+                                day: "MM-DD",
                             },
                         },
+                        // Show the whole selected range for a custom range
+                        min: this.customRange ? this.$root.unixToDateTime(this.customRange.from) : undefined,
+                        max: this.customRange ? this.$root.unixToDateTime(this.customRange.to) : undefined,
                         ticks: {
                             sampleSize: 3,
                             maxRotation: 0,
@@ -214,6 +197,28 @@ export default {
                 },
             };
         },
+        /**
+         * The selected custom range
+         * @returns {{from: number, to: number}|null} Custom range in unix timestamp (seconds), null for a preset
+         */
+        customRange() {
+            if (typeof this.chartPeriodHrs === "object" && this.chartPeriodHrs !== null) {
+                return this.chartPeriodHrs;
+            }
+            return null;
+        },
+
+        /**
+         * Length of the selected time period
+         * @returns {number} Number of hours
+         */
+        chartPeriodHours() {
+            if (this.customRange) {
+                return (this.customRange.to - this.customRange.from) / 3600;
+            }
+            return parseInt(this.chartPeriodHrs);
+        },
+
         chartData() {
             if (this.chartPeriodHrs === "0") {
                 return this.getChartDatapointsFromHeartbeatList();
@@ -238,33 +243,53 @@ export default {
                 this.loading = true;
 
                 let period;
-                try {
+                if (this.customRange) {
+                    period = {
+                        from: this.customRange.from,
+                        to: this.customRange.to,
+                    };
+                } else {
                     period = parseInt(newPeriod);
-                } catch (e) {
-                    // Invalid period
-                    period = 24;
+                    if (isNaN(period)) {
+                        // Invalid period
+                        period = 24;
+                    }
                 }
 
                 this.$root.getMonitorChartData(this.monitorId, period, (res) => {
+                    // Ignore the response if the period has been changed in the meantime
+                    if (newPeriod !== this.chartPeriodHrs) {
+                        return;
+                    }
+
                     if (!res.ok) {
                         this.$root.toastError(res.msg);
                     } else {
                         this.chartRawData = res.data;
-                        this.$root.storage()["chart-period"] = newPeriod;
+                        this.chartRawDataType = res.type;
+
+                        // A custom range is not saved, as it is usually a one-off
+                        if (!this.customRange) {
+                            this.$root.storage()["chart-period"] = newPeriod;
+                        }
                     }
                     this.loading = false;
                 });
 
-                this.chartDataFetchInterval = setInterval(
-                    () => {
-                        this.$root.getMonitorChartData(this.monitorId, period, (res) => {
-                            if (res.ok) {
-                                this.chartRawData = res.data;
-                            }
-                        });
-                    },
-                    5 * 60 * 1000
-                );
+                // A custom range in the past does not change, so it is refreshed only for the presets
+                if (!this.customRange) {
+                    this.chartDataFetchInterval = setInterval(
+                        () => {
+                            this.$root.getMonitorChartData(this.monitorId, period, (res) => {
+                                if (res.ok && newPeriod === this.chartPeriodHrs) {
+                                    this.chartRawData = res.data;
+                                    this.chartRawDataType = res.type;
+                                }
+                            });
+                        },
+                        5 * 60 * 1000
+                    );
+                }
             }
         },
     },
@@ -449,8 +474,14 @@ export default {
             let downData = []; // Down Data for Bar Chart, y-axis is number of down datapoints in this period
             let colorData = []; // Color Data for Bar Chart
 
-            const period = parseInt(this.chartPeriodHrs);
+            const period = this.chartPeriodHours;
             let aggregatePoints = period > 6 ? 12 : 4;
+
+            // Gaps are detected based on the granularity of the data
+            let dataType = this.chartRawDataType;
+            if (!dataType) {
+                dataType = period <= 24 ? "minute" : "hour";
+            }
 
             let aggregateBuffer = [];
 
@@ -469,9 +500,12 @@ export default {
                         const oneSecond = 1000;
                         const oneMinute = oneSecond * 60;
                         const oneHour = oneMinute * 60;
+                        const oneDay = oneHour * 24;
                         if (
-                            (period <= 24 && diff > Math.max(oneMinute * 10, monitorInterval * oneSecond * 10)) ||
-                            (period > 24 && diff > Math.max(oneHour * 10, monitorInterval * oneSecond * 10))
+                            (dataType === "minute" &&
+                                diff > Math.max(oneMinute * 10, monitorInterval * oneSecond * 10)) ||
+                            (dataType === "hour" && diff > Math.max(oneHour * 10, monitorInterval * oneSecond * 10)) ||
+                            (dataType === "day" && diff > Math.max(oneDay * 10, monitorInterval * oneSecond * 10))
                         ) {
                             // Big gap detected
                             // Clear the aggregate buffer
@@ -606,53 +640,6 @@ export default {
     float: right;
     position: relative;
     z-index: 10;
-
-    .dropdown-menu {
-        padding: 0;
-        min-width: 50px;
-        font-size: 0.9em;
-
-        .dark & {
-            background: $dark-bg;
-        }
-
-        .dropdown-item {
-            border-radius: 0.3rem;
-            padding: 2px 16px 4px;
-
-            .dark & {
-                background: $dark-bg;
-                color: $dark-font-color;
-            }
-
-            .dark &:hover {
-                background: $dark-font-color;
-                color: $dark-font-color2;
-            }
-        }
-
-        .dark & .dropdown-item.active {
-            background: $primary;
-            color: $dark-font-color2;
-        }
-    }
-
-    .btn-period-toggle {
-        padding: 2px 15px;
-        background: transparent;
-        border: 0;
-        color: $link-color;
-        opacity: 0.7;
-        font-size: 0.9em;
-
-        &::after {
-            vertical-align: 0.155em;
-        }
-
-        .dark & {
-            color: $dark-font-color;
-        }
-    }
 }
 
 .chart-wrapper {

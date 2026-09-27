@@ -1287,5 +1287,12 @@
     "domainExpiryDescription": "Benachrichtigung auslösen, wenn Domainnamen abläuft. In:",
     "wsCodeDescription": "Für mehr Informationen über die verfügbaren Statuscodes siehe {rfc6455}",
     "Subprotocol(s)": "Unterprotokoll(e)",
-    "hostnameCannotBeIP": "Der DNS-Hostname darf keine IP-Adresse sein. Resolver-Feld verwenden?"
+    "hostnameCannotBeIP": "Der DNS-Hostname darf keine IP-Adresse sein. Resolver-Feld verwenden?",
+    "Time range": "Zeitraum",
+    "customTimeRange": "Benutzerdefinierter Zeitraum",
+    "Apply": "Anwenden",
+    "invalidTimeRange": "Die Endzeit muss nach der Startzeit liegen.",
+    "Degraded": "Beeinträchtigt",
+    "days": "{n} Tag | {n} Tage",
+    "hours": "{n} Stunde | {n} Stunden"
 }

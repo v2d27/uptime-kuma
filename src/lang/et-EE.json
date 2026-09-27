@@ -313,5 +313,15 @@
     "Switch to Light Theme": "Vaheta heledale teemale",
     "Discard": "Loobu",
     "deleteStatusPageMsg": "Kas Sa oled kindel, et soovid kustutada seda staatuse lehte?",
-    "Resend Notification if Down X times consecutively": "Saada teavitus uuesti kui monitor on rikkis X korda järjest"
+    "Resend Notification if Down X times consecutively": "Saada teavitus uuesti kui monitor on rikkis X korda järjest",
+    "Time range": "Ajavahemik",
+    "customTimeRange": "Kohandatud ajavahemik",
+    "Apply": "Rakenda",
+    "invalidTimeRange": "Lõpuaeg peab olema pärast algusaega.",
+    "Degraded": "Häiritud",
+    "startDateTime": "Alguse kuupäev/kellaaeg",
+    "endDateTime": "Lõpu kuupäev/kellaaeg",
+    "days": "{n} päev | {n} päeva",
+    "hours": "{n} tund | {n} tundi",
+    "now": "praegu"
 }

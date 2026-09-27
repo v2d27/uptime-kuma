@@ -499,5 +499,12 @@
     "versionIs": "Versão: {version}",
     "Pin this incident": "Fixar este incidente",
     "now": "agora",
-    "time ago": "Há {0}"
+    "time ago": "Há {0}",
+    "Time range": "Intervalo de tempo",
+    "customTimeRange": "Intervalo personalizado",
+    "Apply": "Aplicar",
+    "invalidTimeRange": "A hora de fim deve ser posterior à hora de início.",
+    "Degraded": "Degradado",
+    "startDateTime": "Data/Hora de início",
+    "endDateTime": "Data/Hora de fim"
 }

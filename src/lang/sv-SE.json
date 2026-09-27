@@ -1703,5 +1703,10 @@
     "Pattern Code ID": "Mönsterkod-ID",
     "Amoot SMS pattern help": "Ange mönsterkod-ID:t från din Amoot SMS-panel. {0}",
     "Create an Amoot SMS pattern": "Skapa ett Amoot SMS-mönster",
-    "Use Own Line for Pattern": "Använd egen rad för mönster"
+    "Use Own Line for Pattern": "Använd egen rad för mönster",
+    "Time range": "Tidsintervall",
+    "customTimeRange": "Anpassat intervall",
+    "Apply": "Tillämpa",
+    "invalidTimeRange": "Sluttiden måste vara efter starttiden.",
+    "Degraded": "Försämrad"
 }

@@ -1141,5 +1141,10 @@
     "LunaSea Device ID": "LunaSea ID уређаја",
     "Show Clickable Link": "Прикажи везе које се могу кликнути",
     "Reverse Proxy": "Повратни прокси",
-    "Coming Soon": "Стиже ускоро"
+    "Coming Soon": "Стиже ускоро",
+    "Time range": "Временски опсег",
+    "customTimeRange": "Прилагођени опсег",
+    "Apply": "Примени",
+    "invalidTimeRange": "Време завршетка мора бити после времена почетка.",
+    "Degraded": "Деградирано"
 }

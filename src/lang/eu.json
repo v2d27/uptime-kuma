@@ -748,5 +748,12 @@
     "telegramSendSilentlyDescription": "Bidali mezuak isilik. Erabiltzaileak soinurik gabeko jakinarazpena jasoko du.",
     "setupDatabaseMariaDB": "Konektatu kanpo MariaDB datu base batekin. Datu base konexioaren informazioa ezarri behar da.",
     "Json Query Expression": "Json Query espresioa",
-    "ignoredTLSError": "TLS/SSL erroreei ezikusiarena eginda"
+    "ignoredTLSError": "TLS/SSL erroreei ezikusiarena eginda",
+    "Time range": "Denbora-tartea",
+    "customTimeRange": "Tarte pertsonalizatua",
+    "Apply": "Aplikatu",
+    "invalidTimeRange": "Amaiera-orduak hasiera-orduaren ondorengoa izan behar du.",
+    "Degraded": "Degradatua",
+    "days": "{n} egun | {n} egun",
+    "hours": "{n} ordu | {n} ordu"
 }

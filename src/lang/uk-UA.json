@@ -1629,5 +1629,10 @@
     "gamedigToken": "Токен",
     "gamedigTokenDescription": "Необов’язково. Деякі ігрові сервери вимагають токен автентифікації.",
     "Bearer Token": "Токен доступу",
-    "Connection Timeout": "Час очікування з’єднання"
+    "Connection Timeout": "Час очікування з’єднання",
+    "Time range": "Період",
+    "customTimeRange": "Довільний період",
+    "Apply": "Застосувати",
+    "invalidTimeRange": "Час завершення має бути пізніше за час початку.",
+    "Degraded": "Частковий збій"
 }

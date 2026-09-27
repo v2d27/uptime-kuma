@@ -106,5 +106,17 @@
     "dbName": "資料庫名稱",
     "Home": "首頁",
     "Cannot connect to the socket server": "連唔到 Socket 伺服器",
-    "Reconnecting...": "重新連線中..."
+    "Reconnecting...": "重新連線中...",
+    "Time range": "時間範圍",
+    "customTimeRange": "自訂範圍",
+    "Apply": "套用",
+    "invalidTimeRange": "結束時間一定要遲過開始時間。",
+    "Degraded": "部分降級",
+    "startDateTime": "開始日期/時間",
+    "endDateTime": "結束日期/時間",
+    "days": "{n} 日",
+    "hours": "{n} 個鐘",
+    "recent": "最近",
+    "Cancel": "取消",
+    "now": "而家"
 }

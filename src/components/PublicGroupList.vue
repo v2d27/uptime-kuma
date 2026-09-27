@@ -74,7 +74,12 @@
                                                     v-if="showOnlyLastHeartbeat"
                                                     :status="statusOfLastHeartbeat(monitor.element.id)"
                                                 />
-                                                <Uptime v-else :monitor="monitor.element" type="24" :pill="true" />
+                                                <Uptime
+                                                    v-else
+                                                    :monitor="monitor.element"
+                                                    :type="rangeData ? 'range' : '24'"
+                                                    :pill="true"
+                                                />
                                                 <a
                                                     v-if="showLink(monitor)"
                                                     :href="monitor.element.url"
@@ -116,7 +121,14 @@
                                             </div>
                                         </div>
                                         <div :key="$root.userHeartbeatBar" class="col-3 col-xl-6">
-                                            <HeartbeatBar size="mid" :monitor-id="monitor.element.id" />
+                                            <HeartbeatBar
+                                                size="mid"
+                                                :monitor-id="monitor.element.id"
+                                                :heartbeat-list="
+                                                    rangeData ? rangeData.heartbeatList[monitor.element.id] || [] : null
+                                                "
+                                                :range="rangeData ? rangeData.range : null"
+                                            />
                                         </div>
                                     </div>
                                 </div>
@@ -164,6 +176,14 @@ export default {
         /** Should only the last heartbeat be shown? */
         showOnlyLastHeartbeat: {
             type: Boolean,
+        },
+        /**
+         * Aggregated heartbeats for the selected time range: { range, heartbeatList }
+         * null to show the recent heartbeats
+         */
+        rangeData: {
+            type: Object,
+            default: null,
         },
     },
     data() {

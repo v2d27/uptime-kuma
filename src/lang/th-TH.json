@@ -1124,5 +1124,10 @@
     "invalidURL": "URL ไม่ถูกต้อง",
     "Certificate Chain:": "ลำดับชั้นของใบรับรอง:",
     "Examples:": "ตัวอย่าง: {0}",
-    "Clone Maintenance": "บำรุงรักษาClone"
+    "Clone Maintenance": "บำรุงรักษาClone",
+    "Time range": "ช่วงเวลา",
+    "customTimeRange": "กำหนดช่วงเวลาเอง",
+    "Apply": "นำไปใช้",
+    "invalidTimeRange": "เวลาสิ้นสุดต้องอยู่หลังเวลาเริ่มต้น",
+    "Degraded": "ประสิทธิภาพลดลง"
 }

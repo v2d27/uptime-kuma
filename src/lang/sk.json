@@ -1694,5 +1694,10 @@
     "notifyAppDeviceIdDescription": "ID zariadenia z aplikácie Notify! alebo ID skupiny, aby sa naraz upozornili všetky zariadenia v skupine.",
     "notifyAppSetup": "Otvorte Notify! a v časti Nastavenia vyhľadajte ID zariadenia a token. Nie je potrebný žiadny účet. Viac informácií nájdete na {0}.",
     "Client Key": "Kľúč klienta",
-    "Channel": "Kanál"
+    "Channel": "Kanál",
+    "Time range": "Časový rozsah",
+    "customTimeRange": "Vlastný rozsah",
+    "Apply": "Použiť",
+    "invalidTimeRange": "Čas konca musí byť po čase začiatku.",
+    "Degraded": "Obmedzené"
 }

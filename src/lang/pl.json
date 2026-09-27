@@ -1525,5 +1525,10 @@
     "Connection Timeout": "Przekroczenie limitu czasu połączenia",
     "Peer ID": "Id Peer'a",
     "vkApiVersionDescription": "Wersja VK API używana przez żądanie. Zostaw domyślne chyba że potrzebujesz innej wersji VK API przez kompatybilność.",
-    "vkDontParseLinksDescription": "Jeżeli włączone, VK nie będzie generował podglądu/fragmentów linku."
+    "vkDontParseLinksDescription": "Jeżeli włączone, VK nie będzie generował podglądu/fragmentów linku.",
+    "Time range": "Zakres czasu",
+    "customTimeRange": "Zakres niestandardowy",
+    "Apply": "Zastosuj",
+    "invalidTimeRange": "Czas zakończenia musi być późniejszy niż czas rozpoczęcia.",
+    "Degraded": "Obniżona wydajność"
 }

@@ -14,6 +14,11 @@
                         {{ statusText }}
                     </div>
                     <div class="tooltip-time">{{ timeText }}</div>
+                    <!-- Aggregated beat covering a period -->
+                    <div v-if="content?.endTime" class="tooltip-time">– {{ $root.datetime(content.endTime) }}</div>
+                    <div v-if="content?.uptime != null" class="tooltip-message">
+                        {{ $t("Uptime") }}: {{ uptimeText }}
+                    </div>
                     <div v-if="content?.msg" class="tooltip-message">{{ content.msg }}</div>
                 </slot>
             </div>
@@ -74,7 +79,8 @@ export default {
                 case UP:
                     return this.$t("Up");
                 case PENDING:
-                    return this.$t("Pending");
+                    // An aggregated beat (with uptime) is pending if it was partially down in its period
+                    return this.content.uptime != null ? this.$t("Degraded") : this.$t("Pending");
                 case MAINTENANCE:
                     return this.$t("Maintenance");
                 default:
@@ -106,6 +112,10 @@ export default {
                 return "";
             }
             return this.$root.datetime(this.content.time);
+        },
+
+        uptimeText() {
+            return Math.round(this.content.uptime * 10000) / 100 + "%";
         },
     },
 };

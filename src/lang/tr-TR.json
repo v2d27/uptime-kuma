@@ -1517,5 +1517,10 @@
     "openwaSession": "Oturum",
     "openwaChatId": "Sohbet Kimliği (Telefon Numarası / İletişim Kimliği / Grup Kimliği)",
     "wayToGetOpenwaApiUrl": "OpenWA örneğinizin URL'si.",
-    "wayToGetOpenwaApiKey": "OpenWA örneğiniz için kullanılan API anahtarı."
+    "wayToGetOpenwaApiKey": "OpenWA örneğiniz için kullanılan API anahtarı.",
+    "Time range": "Zaman aralığı",
+    "customTimeRange": "Özel aralık",
+    "Apply": "Uygula",
+    "invalidTimeRange": "Bitiş zamanı başlangıç zamanından sonra olmalıdır.",
+    "Degraded": "Kısmi kesinti"
 }

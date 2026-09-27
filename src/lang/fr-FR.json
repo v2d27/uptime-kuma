@@ -1736,5 +1736,10 @@
     "notifyAppDeviceIdDescription": "L’ID d’appareil de l’application Notify!, ou un ID de groupe pour alerter tous les appareils d’un groupe en même temps.",
     "notifyAppSetup": "Ouvrez Notify ! et trouvez votre ID d’appareil et jeton sous Paramètres. Aucun compte n’est requis. Pour en savoir plus, rendez-vous sur {0}.",
     "Client Key": "Clé du client",
-    "Channel": "Canal"
+    "Channel": "Canal",
+    "Time range": "Période",
+    "customTimeRange": "Période personnalisée",
+    "Apply": "Appliquer",
+    "invalidTimeRange": "L'heure de fin doit être postérieure à l'heure de début.",
+    "Degraded": "Dégradé"
 }

@@ -1608,5 +1608,10 @@
     "wayToGetEgoSMSToken": "Je kan jouw EgoSMS API gebruikersnaam en wachtwoord {hier}.",
     "egosmsSenderDescription": "Verzend ID weergegeven aan ontvangers (max 11 karakters). Standaard EGOSMS wanneer leeg gelaten.",
     "egosmsPhoneNumberDescription": "Ontvangers nummer met landscode, zonder + of 00 (vb. 2567XXXXXXXX).",
-    "Hash Key": "Hash-sleutel"
+    "Hash Key": "Hash-sleutel",
+    "Time range": "Tijdsbereik",
+    "customTimeRange": "Aangepast bereik",
+    "Apply": "Toepassen",
+    "invalidTimeRange": "De eindtijd moet na de begintijd liggen.",
+    "Degraded": "Verminderd"
 }

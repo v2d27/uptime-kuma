@@ -1621,5 +1621,10 @@
     "gamedigToken": "Token",
     "gamedigTokenDescription": "Neobvezno. Neki poslužitelji igara zahtijevaju token za autentifikaciju.",
     "Bearer Token": "Token nositelja",
-    "Connection Timeout": "Vrijeme isteka konekcije"
+    "Connection Timeout": "Vrijeme isteka konekcije",
+    "Time range": "Vremenski raspon",
+    "customTimeRange": "Prilagođeni raspon",
+    "Apply": "Primijeni",
+    "invalidTimeRange": "Vrijeme završetka mora biti nakon vremena početka.",
+    "Degraded": "Degradirano"
 }

@@ -776,5 +776,13 @@
     "Invert Keyword": "הפוך מילת מפתח",
     "filterActive": "פעיל",
     "Expected Value": "ערך צפוי",
-    "Json Query": "שאילתת Json"
+    "Json Query": "שאילתת Json",
+    "Time range": "טווח זמן",
+    "customTimeRange": "טווח מותאם אישית",
+    "Apply": "החל",
+    "invalidTimeRange": "זמן הסיום חייב להיות אחרי זמן ההתחלה.",
+    "Degraded": "ירידה בביצועים",
+    "days": "{n} יום | {n} ימים",
+    "hours": "{n} שעה | {n} שעות",
+    "now": "עכשיו"
 }

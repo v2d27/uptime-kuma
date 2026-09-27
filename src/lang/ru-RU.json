@@ -1726,5 +1726,10 @@
     "Pinglet Topic URL": "URL темы",
     "ntpStratumThreshold": "Порог стратификации",
     "pingPacketSizeWarning": "Размер пакета меньше 16 не приводит к определению времени кругового пути в Linux",
-    "Connection Timeout": "Таймаут соединения"
+    "Connection Timeout": "Таймаут соединения",
+    "Time range": "Период",
+    "customTimeRange": "Произвольный период",
+    "Apply": "Применить",
+    "invalidTimeRange": "Время окончания должно быть позже времени начала.",
+    "Degraded": "Частичный сбой"
 }

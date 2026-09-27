@@ -1549,5 +1549,10 @@
     "360messengerWayToWriteRecipient": "Skriv inn ett eller flere telefonnumre i internasjonalt format uten plusstegn foran (f.eks. {0}). Skill flere tall med komma.",
     "360messengerWayToGetUrlAndToken": "Du kan få 360messenger API-nøkkelen din fra {0}.",
     "360messengerErrorNoGroups": "Ingen WhatsApp grupper ble funnet for denne kontoen.",
-    "360messengerErrorApi": "Kan ikke laste inn WhatsApp gruppelisten (Feil {statusCode}: {message})."
+    "360messengerErrorApi": "Kan ikke laste inn WhatsApp gruppelisten (Feil {statusCode}: {message}).",
+    "Time range": "Tidsrom",
+    "customTimeRange": "Egendefinert tidsrom",
+    "Apply": "Bruk",
+    "invalidTimeRange": "Sluttidspunktet må være etter starttidspunktet.",
+    "Degraded": "Redusert"
 }

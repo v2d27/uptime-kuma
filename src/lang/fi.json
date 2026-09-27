@@ -1213,5 +1213,10 @@
     "steamApiKeyDescriptionAt": "Steam-pelipalvelimen valvontaan tarvitaan Steam Web API -avain. Voit rekisteröidä API-avaimesi osoitteessa {url}",
     "mqttWebsocketPathExplanation": "WebSocket-polku MQTT:n WebSocket-yhteyksille (esim. /mqtt)",
     "mqttWebsocketPathInvalid": "Käytä kelvollista WebSocket-polun muotoa",
-    "invalidHostnameOrIP": "Virheellinen isäntänimi tai IP-osoite. Isäntänimen on oltava kelvollinen FQDN-nimi. Jokerimerkkejä ei voi käyttää. Nimi voi sisältää alaviivan tai päättyä pisteeseen."
+    "invalidHostnameOrIP": "Virheellinen isäntänimi tai IP-osoite. Isäntänimen on oltava kelvollinen FQDN-nimi. Jokerimerkkejä ei voi käyttää. Nimi voi sisältää alaviivan tai päättyä pisteeseen.",
+    "Time range": "Aikaväli",
+    "customTimeRange": "Mukautettu aikaväli",
+    "Apply": "Käytä",
+    "invalidTimeRange": "Päättymisajan on oltava alkamisajan jälkeen.",
+    "Degraded": "Heikentynyt"
 }

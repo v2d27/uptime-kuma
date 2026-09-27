@@ -1637,5 +1637,10 @@
     "Pattern Code ID": "Pattern Code ID",
     "Amoot SMS pattern help": "Enter the Pattern Code ID from your Amoot SMS panel. {0}",
     "Create an Amoot SMS pattern": "Create an Amoot SMS pattern",
-    "Use Own Line for Pattern": "Use Own Line for Pattern"
+    "Use Own Line for Pattern": "Use Own Line for Pattern",
+    "Time range": "Time range",
+    "customTimeRange": "Custom range",
+    "Apply": "Apply",
+    "invalidTimeRange": "The end time must be after the start time.",
+    "Degraded": "Degraded"
 }

@@ -1690,5 +1690,10 @@
     "notifyAppSetup": "Spusťte aplikaci Notify! a v části Nastavení vyhledejte ID zařízení a token. Není třeba mít žádný účet. Více informací najdete na {0}.",
     "smsgatewayUrlHelptext": "Základní URL vaší SMS brány bez cesty k API.",
     "smsgatewayTo": "Telefonní číslo (čísla)",
-    "smsgatewayToHelptext": "Seznam telefonních čísel příjemců oddělených čárkami v mezinárodním formátu (např. +15551234567)"
+    "smsgatewayToHelptext": "Seznam telefonních čísel příjemců oddělených čárkami v mezinárodním formátu (např. +15551234567)",
+    "Time range": "Časový rozsah",
+    "customTimeRange": "Vlastní rozsah",
+    "Apply": "Použít",
+    "invalidTimeRange": "Čas konce musí být po čase začátku.",
+    "Degraded": "Omezeno"
 }

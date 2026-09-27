@@ -489,11 +489,20 @@
                     👀 {{ $t("statusPageNothing") }}
                 </div>
 
+                <div
+                    v-if="!enableEditMode && $root.publicGroupList.length > 0"
+                    class="d-flex justify-content-end mb-2"
+                    data-testid="time-range-filter"
+                >
+                    <TimeRangeSelector v-model="timeRange" />
+                </div>
+
                 <PublicGroupList
                     :edit-mode="enableEditMode"
                     :show-tags="config.showTags"
                     :show-certificate-expiry="config.showCertificateExpiry"
                     :show-only-last-heartbeat="config.showOnlyLastHeartbeat"
+                    :range-data="enableEditMode ? null : rangeData"
                 />
             </div>
 
@@ -623,6 +632,7 @@ import MaintenanceTime from "../components/MaintenanceTime.vue";
 import IncidentHistory from "../components/IncidentHistory.vue";
 import IncidentManageModal from "../components/IncidentManageModal.vue";
 import IncidentEditForm from "../components/IncidentEditForm.vue";
+import TimeRangeSelector from "../components/TimeRangeSelector.vue";
 import { getResBaseURL } from "../util-frontend";
 import { authClient } from "../auth-client";
 import {
@@ -662,6 +672,7 @@ export default {
         IncidentHistory,
         IncidentManageModal,
         IncidentEditForm,
+        TimeRangeSelector,
     },
 
     // Leave Page for vue route change
@@ -713,6 +724,14 @@ export default {
             incidentHistoryLoading: false,
             incidentHistoryNextCursor: null,
             incidentHistoryHasMore: false,
+            // Time range of the heartbeat bars: "0" for recent, hours as string, or { from, to } (unix seconds)
+            timeRange: this.timeRangeFromQuery(this.$route.query),
+            // Aggregated heartbeats for the time range: { range, heartbeatList }
+            rangeData: null,
+            // Number of beats which fit in the heartbeat bar
+            rangeBeats: 0,
+            rangeReloadTimeout: null,
+            heartbeatRequestId: 0,
         };
     },
     computed: {
@@ -950,6 +969,18 @@ export default {
             document.title = title;
         },
 
+        timeRange() {
+            // Keep the selected time range in the URL, so it can be shared
+            const query = { ...this.$route.query };
+            delete query.range;
+            delete query.from;
+            delete query.to;
+            Object.assign(query, this.timeRangeToQuery(this.timeRange));
+            this.$router.replace({ query }).catch(() => {});
+
+            this.updateHeartbeatList();
+        },
+
         "$root.monitorList"() {
             let count = Object.keys(this.$root.monitorList).length;
 
@@ -1087,31 +1118,155 @@ export default {
         updateHeartbeatList() {
             // If editMode, it will use the data from websocket.
             if (!this.editMode) {
-                axios.get("/api/status-page/heartbeat/" + this.slug).then((res) => {
-                    const { heartbeatList, uptimeList } = res.data;
+                const requestId = ++this.heartbeatRequestId;
+                const rangeParams = this.timeRangeParams(this.timeRange);
+                const params = rangeParams ? { ...rangeParams, beats: this.rangeBeats || 50 } : undefined;
 
-                    this.$root.heartbeatList = heartbeatList;
-                    this.$root.uptimeList = uptimeList;
-
-                    const heartbeatIds = Object.keys(heartbeatList);
-                    const downMonitors = heartbeatIds.reduce((downMonitorsAmount, currentId) => {
-                        const monitorHeartbeats = heartbeatList[currentId];
-                        const lastHeartbeat = monitorHeartbeats.at(-1);
-
-                        if (lastHeartbeat) {
-                            return lastHeartbeat.status === 0 ? downMonitorsAmount + 1 : downMonitorsAmount;
-                        } else {
-                            return downMonitorsAmount;
+                axios
+                    .get("/api/status-page/heartbeat/" + this.slug, { params })
+                    .then((res) => {
+                        // Ignore outdated responses, e.g. when the time range has been changed in the meantime
+                        if (requestId !== this.heartbeatRequestId) {
+                            return;
                         }
-                    }, 0);
 
-                    favicon.badge(downMonitors);
+                        const { heartbeatList, uptimeList, rangeHeartbeatList, range } = res.data;
 
-                    this.loadedData = true;
-                    this.lastUpdateTime = dayjs();
-                    this.updateUpdateTimer();
-                });
+                        this.$root.heartbeatList = heartbeatList;
+                        this.$root.uptimeList = uptimeList;
+
+                        if (rangeParams && rangeHeartbeatList) {
+                            this.rangeData = {
+                                range: {
+                                    ...range,
+                                    hours: rangeParams.hours,
+                                },
+                                heartbeatList: rangeHeartbeatList,
+                            };
+                        } else {
+                            this.rangeData = null;
+                        }
+
+                        const heartbeatIds = Object.keys(heartbeatList);
+                        const downMonitors = heartbeatIds.reduce((downMonitorsAmount, currentId) => {
+                            const monitorHeartbeats = heartbeatList[currentId];
+                            const lastHeartbeat = monitorHeartbeats.at(-1);
+
+                            if (lastHeartbeat) {
+                                return lastHeartbeat.status === 0 ? downMonitorsAmount + 1 : downMonitorsAmount;
+                            } else {
+                                return downMonitorsAmount;
+                            }
+                        }, 0);
+
+                        favicon.badge(downMonitors);
+
+                        this.loadedData = true;
+                        this.lastUpdateTime = dayjs();
+                        this.updateUpdateTimer();
+                    })
+                    .catch((error) => {
+                        // Invalid time range (e.g. from a modified URL), go back to the recent heartbeats
+                        if (rangeParams && requestId === this.heartbeatRequestId && error.response?.status < 500) {
+                            toast.error(error.response.data?.msg ?? error.message);
+                            this.timeRange = "0";
+                        }
+                    });
             }
+        },
+
+        /**
+         * Called by the heartbeat bars with the number of beats which fit in them,
+         * so the aggregated heartbeats for a time range can be loaded to fit the bar
+         * @param {number} maxBeat Number of beats which fit in the heartbeat bar
+         * @returns {void}
+         */
+        reloadHeartbeatData(maxBeat) {
+            if (maxBeat <= 0 || maxBeat === this.rangeBeats) {
+                return;
+            }
+
+            this.rangeBeats = Math.min(maxBeat, 200);
+
+            if (this.timeRange !== "0") {
+                // Many heartbeat bars report at the same time (e.g. on resize), only reload once
+                clearTimeout(this.rangeReloadTimeout);
+                this.rangeReloadTimeout = setTimeout(() => {
+                    this.updateHeartbeatList();
+                }, 300);
+            }
+        },
+
+        /**
+         * Get the time range from the URL query
+         * @param {object} query URL query, e.g. { range: "7d" } or { from: "1700000000", to: "1700086400" }
+         * @returns {string|object} "0" for recent, hours as string, or { from, to } in unix timestamp (seconds)
+         */
+        timeRangeFromQuery(query) {
+            const match = /^([0-9]+)([hd])$/.exec(query.range || "");
+            if (match) {
+                const hours = Number(match[1]) * (match[2] === "d" ? 24 : 1);
+                if (hours >= 1 && hours <= 365 * 24) {
+                    return String(hours);
+                }
+            }
+
+            const from = Number(query.from);
+            const to = Number(query.to);
+            if (query.from && query.to && Number.isInteger(from) && Number.isInteger(to) && from < to) {
+                return {
+                    from,
+                    to,
+                };
+            }
+
+            return "0";
+        },
+
+        /**
+         * Get the URL query for a time range
+         * @param {string|object} timeRange Time range, see timeRangeFromQuery()
+         * @returns {object} URL query
+         */
+        timeRangeToQuery(timeRange) {
+            if (typeof timeRange === "object") {
+                return {
+                    from: String(timeRange.from),
+                    to: String(timeRange.to),
+                };
+            }
+
+            const hours = Number(timeRange);
+            if (hours > 0) {
+                return {
+                    range: hours % 24 === 0 ? `${hours / 24}d` : `${hours}h`,
+                };
+            }
+
+            return {};
+        },
+
+        /**
+         * Get the API parameters for a time range
+         * @param {string|object} timeRange Time range, see timeRangeFromQuery()
+         * @returns {object|null} { hours } or { from, to }, null for the recent heartbeats
+         */
+        timeRangeParams(timeRange) {
+            if (typeof timeRange === "object") {
+                return {
+                    from: timeRange.from,
+                    to: timeRange.to,
+                };
+            }
+
+            const hours = Number(timeRange);
+            if (hours > 0) {
+                return {
+                    hours,
+                };
+            }
+
+            return null;
         },
 
         /**

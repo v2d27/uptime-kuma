@@ -974,5 +974,12 @@
     "cacheBusterParam": "Дадайце параметр {0}",
     "defaultFriendlyName": "Новы манiтор",
     "Path": "Шлях",
-    "Add Tags": "Дадаць тэгi"
+    "Add Tags": "Дадаць тэгi",
+    "Time range": "Перыяд",
+    "customTimeRange": "Адвольны перыяд",
+    "Apply": "Ужыць",
+    "invalidTimeRange": "Час заканчэння павінен быць пазней за час пачатку.",
+    "Degraded": "Частковы збой",
+    "days": "{n} дзень | {n} дзён",
+    "hours": "{n} гадзіна | {n} гадзін"
 }

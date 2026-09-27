@@ -93,5 +93,17 @@
     "Not available, please setup.": "Mavjud emas, sozlang.",
     "Light": "Yorug'",
     "Dark": "Qorung'u",
-    "Auto": "Avto"
+    "Auto": "Avto",
+    "Time range": "Vaqt oralig‘i",
+    "customTimeRange": "Maxsus oraliq",
+    "Apply": "Qo‘llash",
+    "invalidTimeRange": "Tugash vaqti boshlanish vaqtidan keyin bo‘lishi kerak.",
+    "Degraded": "Qisman nosoz",
+    "startDateTime": "Boshlanish sanasi/vaqti",
+    "endDateTime": "Tugash sanasi/vaqti",
+    "days": "{n} kun | {n} kun",
+    "hours": "{n} soat | {n} soat",
+    "recent": "So‘nggi",
+    "Cancel": "Bekor qilish",
+    "now": "hozir"
 }

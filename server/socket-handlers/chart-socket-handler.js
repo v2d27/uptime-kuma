@@ -1,6 +1,7 @@
 const { checkLogin } = require("../util-server");
 const { UptimeCalculator } = require("../uptime-calculator");
 const { log } = require("../../src/util");
+const { parseTimeRange } = require("../utils/time-range");
 
 module.exports.chartSocketHandler = (socket) => {
     socket.on("getMonitorChartData", async (monitorID, period, callback) => {
@@ -16,17 +17,27 @@ module.exports.chartSocketHandler = (socket) => {
             let uptimeCalculator = await UptimeCalculator.getUptimeCalculator(monitorID);
 
             let data;
-            if (period <= 24) {
-                data = uptimeCalculator.getDataArray(period * 60, "minute");
+            let type;
+            if (typeof period === "object") {
+                // Custom range: { from, to } in unix timestamp (seconds)
+                const range = parseTimeRange(period.from, period.to);
+                type = uptimeCalculator.getRangeDataType(range.from);
+                data = uptimeCalculator.getDataArrayInRange(range.from, range.to, type);
+            } else if (period <= 24) {
+                type = "minute";
+                data = uptimeCalculator.getDataArray(period * 60, type);
             } else if (period <= 720) {
-                data = uptimeCalculator.getDataArray(period, "hour");
+                type = "hour";
+                data = uptimeCalculator.getDataArray(period, type);
             } else {
-                data = uptimeCalculator.getDataArray(period / 24, "day");
+                type = "day";
+                data = uptimeCalculator.getDataArray(period / 24, type);
             }
 
             callback({
                 ok: true,
                 data,
+                type,
             });
         } catch (e) {
             callback({

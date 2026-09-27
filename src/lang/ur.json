@@ -565,5 +565,13 @@
     "Refresh Interval Description": "اسٹیٹس کا صفحہ ہر {0} سیکنڈ میں مکمل سائٹ ریفریش کرے گا",
     "ignoreTLSErrorGeneral": "کنکشن کے لیے TLS/SSL کی خرابی کو نظر انداز کریں",
     "locally configured mail transfer agent": "مقامی طور پر ترتیب شدہ میل ٹرانسفر ایجنٹ",
-    "Either enter the hostname of the server you want to connect to or localhost if you intend to use a locally configured mail transfer agent": "یا تو اس سرور کا میزبان نام درج کریں جس سے آپ جڑنا چاہتے ہیں یا اگر آپ {local_mta} استعمال کرنا چاہتے ہیں تو {localhost}"
+    "Either enter the hostname of the server you want to connect to or localhost if you intend to use a locally configured mail transfer agent": "یا تو اس سرور کا میزبان نام درج کریں جس سے آپ جڑنا چاہتے ہیں یا اگر آپ {local_mta} استعمال کرنا چاہتے ہیں تو {localhost}",
+    "Time range": "وقت کی حد",
+    "customTimeRange": "حسب ضرورت حد",
+    "Apply": "لاگو کریں",
+    "invalidTimeRange": "اختتامی وقت آغاز کے وقت کے بعد ہونا چاہیے۔",
+    "Degraded": "متاثر",
+    "days": "{n} دن | {n} دن",
+    "hours": "{n} گھنٹہ | {n} گھنٹے",
+    "now": "ابھی"
 }

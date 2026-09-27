@@ -178,5 +178,17 @@
     "example": "Primer",
     "webhookAdditionalHeadersTitle": "Dodatna zaglavlja",
     "records": "izveštaji",
-    "Maintenance": "Održavanje"
+    "Maintenance": "Održavanje",
+    "Time range": "Vremenski opseg",
+    "customTimeRange": "Prilagođeni opseg",
+    "Apply": "Primeni",
+    "invalidTimeRange": "Vreme završetka mora biti posle vremena početka.",
+    "Degraded": "Degradirano",
+    "startDateTime": "Početni datum/vreme",
+    "endDateTime": "Krajnji datum/vreme",
+    "days": "{n} dan | {n} dana",
+    "hours": "{n} sat | {n} sati",
+    "recent": "Nedavno",
+    "Cancel": "Otkaži",
+    "now": "sada"
 }

@@ -1163,5 +1163,12 @@
     "FlashDuty Push URL": "Push URL",
     "Clear All Events": "Összes esemény törlése",
     "clearAllEventsMsg": "Biztosan törölni szeretné az összes eseményt?",
-    "SpugPush Template Code": "Sablon kód"
+    "SpugPush Template Code": "Sablon kód",
+    "Time range": "Időtartomány",
+    "customTimeRange": "Egyéni időtartomány",
+    "Apply": "Alkalmaz",
+    "invalidTimeRange": "A befejezés időpontjának a kezdés után kell lennie.",
+    "Degraded": "Korlátozott",
+    "days": "{n} nap | {n} nap",
+    "hours": "{n} óra | {n} óra"
 }

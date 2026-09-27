@@ -1262,5 +1262,10 @@
     "API Token": "API Token",
     "See Jira Cloud Docs": "請參閱 Jira Cloud 文檔",
     "certHostnameMismatch": "憑證主機名稱與監控 URL 不符。",
-    "sipsakPingWarning": "要使用 SIP Options Ping 監視器，您需要在不安裝 Docker 的情況下安裝 Uptime Kuma，並在伺服器上安裝 Sipsak 用戶端。"
+    "sipsakPingWarning": "要使用 SIP Options Ping 監視器，您需要在不安裝 Docker 的情況下安裝 Uptime Kuma，並在伺服器上安裝 Sipsak 用戶端。",
+    "Time range": "時間範圍",
+    "customTimeRange": "自訂範圍",
+    "Apply": "套用",
+    "invalidTimeRange": "結束時間必須晚於開始時間。",
+    "Degraded": "部分降級"
 }

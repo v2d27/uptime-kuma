@@ -1610,5 +1610,10 @@
     "maxUseTemplateDescription": "Wenn diese Option aktiviert ist, wird die Nachricht anhand einer benutzerdefinierten Vorlage versendet.",
     "API Version": "API-Version",
     "Peer ID": "Peer-ID",
-    "wxPusherDownloadApp": "App herunterladen"
+    "wxPusherDownloadApp": "App herunterladen",
+    "Time range": "Zeitraum",
+    "customTimeRange": "Benutzerdefinierter Zeitraum",
+    "Apply": "Anwenden",
+    "invalidTimeRange": "Die Endzeit muss nach der Startzeit liegen.",
+    "Degraded": "Beeinträchtigt"
 }

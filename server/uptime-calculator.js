@@ -767,6 +767,132 @@ class UptimeCalculator {
     }
 
     /**
+     * Pick the finest data granularity which is still kept for the given range.
+     * Minutely data is kept for 24 hours, hourly data for 30 days and daily data for 365 days.
+     * @param {number} from Start of the range, unix timestamp in seconds
+     * @returns {"day" | "hour" | "minute"} the type of data which covers the range
+     */
+    getRangeDataType(from) {
+        const now = this.getCurrentDate().unix();
+
+        if (from >= now - this.statMinutelyKeepHour * 3600) {
+            return "minute";
+        } else if (from >= now - this.statHourlyKeepDay * 86400) {
+            return "hour";
+        } else {
+            return "day";
+        }
+    }
+
+    /**
+     * Get data in form of an array for an absolute time range.
+     * Unlike getDataArray(), the range does not have to end at the current time.
+     * @param {number} from Start of the range, unix timestamp in seconds (inclusive)
+     * @param {number} to End of the range, unix timestamp in seconds (inclusive)
+     * @param {"day" | "hour" | "minute"} type the type of data which is expected to be returned
+     * @returns {Array<object>} uptime data, newest first
+     * @throws {Error} Invalid range or the range is too large for the type
+     */
+    getDataArrayInRange(from, to, type = "day") {
+        let step;
+        let dataList;
+        let maxNum;
+
+        switch (type) {
+            case "day":
+                step = 86400;
+                dataList = this.dailyUptimeDataList;
+                maxNum = 365;
+                break;
+            case "hour":
+                step = 3600;
+                dataList = this.hourlyUptimeDataList;
+                maxNum = 24 * 30;
+                break;
+            case "minute":
+                step = 60;
+                dataList = this.minutelyUptimeDataList;
+                maxNum = 24 * 60;
+                break;
+            default:
+                throw new Error("Invalid type");
+        }
+
+        if (!Number.isFinite(from) || !Number.isFinite(to) || from > to) {
+            throw new Error("Invalid range");
+        }
+
+        // All keys are the unix timestamp (UTC) of the start of the period, so they can be aligned with modulo
+        let key = to - (to % step);
+        const endTimestamp = from - (from % step);
+
+        // +1 as an unaligned range can touch one more period than the data kept
+        if ((key - endTimestamp) / step > maxNum) {
+            throw new Error("The range is too large");
+        }
+
+        let result = [];
+
+        for (; key >= endTimestamp; key -= step) {
+            let data = dataList[key];
+
+            if (data) {
+                data.timestamp = key;
+                result.push(data);
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Split a time range into equal-sized buckets and sum up the uptime data in each bucket.
+     * The number of buckets is reduced if the available data is coarser than the requested buckets.
+     * @param {number} from Start of the range, unix timestamp in seconds
+     * @param {number} to End of the range, unix timestamp in seconds
+     * @param {number} count Maximum number of buckets
+     * @returns {Array<{start: number, end: number, up: number, down: number, maintenance: number, avgPing: number|null}>} buckets, oldest first
+     */
+    getBucketsInRange(from, to, count) {
+        const type = this.getRangeDataType(from);
+        const step = {
+            day: 86400,
+            hour: 3600,
+            minute: 60,
+        }[type];
+
+        count = Math.max(1, Math.min(count, Math.ceil((to - from) / step)));
+        const size = (to - from) / count;
+
+        let buckets = [];
+        for (let i = 0; i < count; i++) {
+            buckets.push({
+                start: Math.round(from + i * size),
+                end: Math.round(from + (i + 1) * size),
+                up: 0,
+                down: 0,
+                maintenance: 0,
+                totalPing: 0,
+            });
+        }
+
+        for (const data of this.getDataArrayInRange(from, to, type)) {
+            let index = Math.floor((data.timestamp - from) / size);
+            let bucket = buckets[Math.max(0, Math.min(count - 1, index))];
+
+            bucket.up += data.up;
+            bucket.down += data.down;
+            bucket.maintenance += data.maintenance || 0;
+            bucket.totalPing += (data.avgPing || 0) * data.up;
+        }
+
+        return buckets.map(({ totalPing, ...bucket }) => ({
+            ...bucket,
+            avgPing: bucket.up > 0 ? totalPing / bucket.up : null,
+        }));
+    }
+
+    /**
      * Get the uptime data for given duration.
      * @param {string} duration  A string with a number and a unit (m,h,d,w,M,y), such as 24h, 30d, 1y.
      * @returns {UptimeDataResult} UptimeDataResult

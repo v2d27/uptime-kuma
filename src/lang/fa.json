@@ -1214,5 +1214,10 @@
     "No incidents recorded": "هنوز هیچ حادثه‌ای ثبت نشده است",
     "years": "{n} سال | {n} سال",
     "logoutCurrentUser": "از {username} خارج شو",
-    "minuteShort": "{n} دقیقه| {n} دقیقه"
+    "minuteShort": "{n} دقیقه| {n} دقیقه",
+    "Time range": "بازه زمانی",
+    "customTimeRange": "بازه سفارشی",
+    "Apply": "اعمال",
+    "invalidTimeRange": "زمان پایان باید پس از زمان شروع باشد.",
+    "Degraded": "کاهش کیفیت"
 }

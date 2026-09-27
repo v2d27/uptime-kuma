@@ -1489,5 +1489,10 @@
     "Notifications Enabled": "Meldungen san o",
     "username": "Nutzername",
     "Clear current filters": "Filter rausdo",
-    "pause": "Pause"
+    "pause": "Pause",
+    "Time range": "Zeitraum",
+    "customTimeRange": "Benutzerdefinierter Zeitraum",
+    "Apply": "Anwenden",
+    "invalidTimeRange": "Die Endzeit muss nach der Startzeit liegen.",
+    "Degraded": "Beeinträchtigt"
 }

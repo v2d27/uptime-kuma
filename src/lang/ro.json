@@ -1088,5 +1088,12 @@
     "mariadbCaCertificateLabel": "Certificat CA",
     "No incidents recorded": "Nu au fost înregistrate incidente",
     "Load More": "Încărcați mai mult",
-    "versionIs": "Versiune: {version}"
+    "versionIs": "Versiune: {version}",
+    "Time range": "Interval de timp",
+    "customTimeRange": "Interval personalizat",
+    "Apply": "Aplică",
+    "invalidTimeRange": "Ora de sfârșit trebuie să fie după ora de început.",
+    "Degraded": "Degradat",
+    "days": "{n} zi | {n} zile",
+    "hours": "{n} oră | {n} ore"
 }

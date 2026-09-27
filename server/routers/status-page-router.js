@@ -4,9 +4,11 @@ const { UptimeKumaServer } = require("../uptime-kuma-server");
 const StatusPage = require("../model/status_page");
 const { allowDevAllOrigin, sendHttpError } = require("../util-server");
 const { R } = require("redbean-node");
-const { badgeConstants } = require("../../src/util");
+const { badgeConstants, UP, DOWN, PENDING, MAINTENANCE } = require("../../src/util");
 const { makeBadge } = require("badge-maker");
 const { UptimeCalculator } = require("../uptime-calculator");
+const { parseTimeRange, lastHoursTimeRange } = require("../utils/time-range");
+const dayjs = require("dayjs");
 
 let router = express.Router();
 
@@ -59,14 +61,70 @@ router.get("/api/status-page/:slug", cache("5 minutes"), async (request, respons
     }
 });
 
+/**
+ * Convert an aggregated bucket from UptimeCalculator.getBucketsInRange() into a public heartbeat-like object
+ * @param {object} bucket Aggregated bucket
+ * @returns {object} Heartbeat-like object for the heartbeat bar
+ */
+function bucketToPublicBeat(bucket) {
+    let status = null;
+    let uptime = null;
+
+    if (bucket.up + bucket.down > 0) {
+        uptime = bucket.up / (bucket.up + bucket.down);
+    }
+
+    if (bucket.down > 0 && bucket.up > 0) {
+        // Partially down in this period
+        status = PENDING;
+    } else if (bucket.down > 0) {
+        status = DOWN;
+    } else if (bucket.up > 0) {
+        status = UP;
+    } else if (bucket.maintenance > 0) {
+        status = MAINTENANCE;
+    }
+
+    return {
+        status,
+        time: dayjs.unix(bucket.start).utc().format("YYYY-MM-DD HH:mm:ss"),
+        endTime: dayjs.unix(bucket.end).utc().format("YYYY-MM-DD HH:mm:ss"),
+        msg: "",
+        ping: bucket.avgPing,
+        uptime,
+    };
+}
+
 // Status Page Polling Data
 // Can fetch only if published
+// Optional query for the heartbeat bar time range: `hours` (last N hours) or `from` + `to` (unix timestamp in seconds),
+// with `beats` as the max number of aggregated beats per monitor
 router.get("/api/status-page/heartbeat/:slug", cache("1 minutes"), async (request, response) => {
     allowDevAllOrigin(response);
 
     try {
         let heartbeatList = {};
         let uptimeList = {};
+        let rangeHeartbeatList = null;
+        let range = null;
+        let beats = 50;
+
+        if (request.query.hours !== undefined) {
+            range = lastHoursTimeRange(request.query.hours);
+        } else if (request.query.from !== undefined || request.query.to !== undefined) {
+            range = parseTimeRange(request.query.from, request.query.to);
+        }
+
+        if (range) {
+            rangeHeartbeatList = {};
+
+            if (request.query.beats !== undefined) {
+                beats = Number(request.query.beats);
+                if (!Number.isInteger(beats) || beats < 1 || beats > 200) {
+                    throw new Error("Invalid beats");
+                }
+            }
+        }
 
         let slug = request.params.slug;
         slug = slug.toLowerCase();
@@ -98,11 +156,26 @@ router.get("/api/status-page/heartbeat/:slug", cache("1 minutes"), async (reques
 
             const uptimeCalculator = await UptimeCalculator.getUptimeCalculator(monitorID);
             uptimeList[`${monitorID}_24`] = uptimeCalculator.get24Hour().uptime;
+
+            if (range) {
+                const buckets = uptimeCalculator.getBucketsInRange(range.from, range.to, beats);
+                rangeHeartbeatList[monitorID] = buckets.map(bucketToPublicBeat);
+
+                const up = buckets.reduce((total, bucket) => total + bucket.up, 0);
+                const down = buckets.reduce((total, bucket) => total + bucket.down, 0);
+                if (up + down > 0) {
+                    uptimeList[`${monitorID}_range`] = up / (up + down);
+                }
+            }
         }
 
         response.json({
             heartbeatList,
             uptimeList,
+            ...(range && {
+                rangeHeartbeatList,
+                range,
+            }),
         });
     } catch (error) {
         sendHttpError(response, error.message);

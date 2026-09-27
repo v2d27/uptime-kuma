@@ -68,6 +68,14 @@ export default {
             type: Number,
             default: 0,
         },
+        /**
+         * Time range of aggregated beats in heartbeatList: { from, to, hours? }
+         * from/to are unix timestamps (seconds), hours is set for a preset (last N hours)
+         */
+        range: {
+            type: Object,
+            default: null,
+        },
     },
     data() {
         return {
@@ -98,6 +106,14 @@ export default {
         },
 
         /**
+         * Whether the beats are already aggregated by the server for a time range
+         * @returns {boolean} True if aggregated
+         */
+        isAggregated() {
+            return this.normalizedHeartbeatBarDays > 0 || this.range !== null;
+        },
+
+        /**
          * If heartbeatList is null, get it from $root.heartbeatList
          * @returns {object} Heartbeat list
          */
@@ -119,7 +135,7 @@ export default {
             }
 
             // For configured ranges, no padding needed since we show all beats
-            if (this.normalizedHeartbeatBarDays > 0) {
+            if (this.isAggregated) {
                 return 0;
             }
 
@@ -141,8 +157,8 @@ export default {
                 return [];
             }
 
-            // If heartbeat days is configured (not auto), data is already aggregated from server
-            if (this.normalizedHeartbeatBarDays > 0 && this.beatList.length > 0) {
+            // If heartbeat days or a time range is configured (not auto), data is already aggregated from server
+            if (this.isAggregated && this.beatList.length > 0) {
                 // Show all beats from server - they are already properly aggregated
                 return this.beatList;
             }
@@ -225,6 +241,15 @@ export default {
          * @returns {string} The time elapsed in minutes or hours.
          */
         timeSinceFirstBeat() {
+            if (this.range) {
+                if (this.range.hours) {
+                    return this.range.hours > 24 && this.range.hours % 24 === 0
+                        ? this.$t("days", this.range.hours / 24)
+                        : this.$t("hours", this.range.hours);
+                }
+                return this.$root.unixToDayjs(this.range.from).format("YYYY-MM-DD HH:mm");
+            }
+
             if (this.normalizedHeartbeatBarDays === 1) {
                 return this.normalizedHeartbeatBarDays * 24 + "h";
             }
@@ -243,6 +268,13 @@ export default {
          * @returns {string} The elapsed time in a minutes, hours or "now".
          */
         timeSinceLastBeat() {
+            if (this.range) {
+                if (this.range.hours) {
+                    return this.$t("now");
+                }
+                return this.$root.unixToDayjs(this.range.to).format("YYYY-MM-DD HH:mm");
+            }
+
             const lastValidBeat = this.shortBeatList.at(-1);
             const seconds = dayjs().diff(dayjs.utc(lastValidBeat?.time), "seconds");
 
@@ -378,8 +410,8 @@ export default {
                     this.$refs.wrap.clientWidth / (this.beatWidth + this.beatHoverAreaPadding * 2)
                 );
 
-                // If maxBeat changed and we're in configured days mode, notify parent to reload data
-                if (newMaxBeat !== this.maxBeat && this.normalizedHeartbeatBarDays > 0) {
+                // If maxBeat changed, notify parent, so it can load aggregated data which fits the bar
+                if (newMaxBeat !== this.maxBeat) {
                     this.maxBeat = newMaxBeat;
 
                     // Find the closest parent with reloadHeartbeatData method (StatusPage)
@@ -390,8 +422,6 @@ export default {
                     if (parent && parent.reloadHeartbeatData) {
                         parent.reloadHeartbeatData(newMaxBeat);
                     }
-                } else {
-                    this.maxBeat = newMaxBeat;
                 }
             }
         },

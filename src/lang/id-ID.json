@@ -1459,5 +1459,10 @@
     "monitorTypeGameServer": "Server Game",
     "monitorTypeDatabase": "Tipe Database Monitor",
     "monitorTypeSpecial": "Spesial",
-    "oracledbConnectionString": "Database Oracle: {connectionString}"
+    "oracledbConnectionString": "Database Oracle: {connectionString}",
+    "Time range": "Rentang waktu",
+    "customTimeRange": "Rentang kustom",
+    "Apply": "Terapkan",
+    "invalidTimeRange": "Waktu selesai harus setelah waktu mulai.",
+    "Degraded": "Terganggu"
 }

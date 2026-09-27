@@ -628,5 +628,13 @@
     "Days Remaining:": "Preostali dnevi:",
     "Issuer:": "Izdajatelj:",
     "Fingerprint:": "Prstni odtis:",
-    "No Proxy": "Ni proxy-ja"
+    "No Proxy": "Ni proxy-ja",
+    "Time range": "Časovno obdobje",
+    "customTimeRange": "Obdobje po meri",
+    "Apply": "Uporabi",
+    "invalidTimeRange": "Končni čas mora biti po začetnem času.",
+    "Degraded": "Okrnjeno",
+    "days": "{n} dan | {n} dni",
+    "hours": "{n} ura | {n} ur",
+    "now": "zdaj"
 }

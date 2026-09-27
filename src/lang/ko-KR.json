@@ -980,5 +980,10 @@
     "Loading...": "불러오는 중...",
     "Monitors": "{n} 모니터 | {n} 모니터",
     "days": "{n} 일 | {n} 일",
-    "hours": "{n} 시간 | {n} 시간"
+    "hours": "{n} 시간 | {n} 시간",
+    "Time range": "기간",
+    "customTimeRange": "사용자 지정 기간",
+    "Apply": "적용",
+    "invalidTimeRange": "종료 시간은 시작 시간 이후여야 합니다.",
+    "Degraded": "성능 저하"
 }

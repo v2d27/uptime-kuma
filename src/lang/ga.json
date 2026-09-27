@@ -1685,5 +1685,10 @@
     "milkySafetyTips": "Ar mhaithe le sábháilteacht, ní mór comhartha rochtana a shocrú",
     "smsgatewayUrlHelptext": "Bun-URL do Gheata SMS, gan cosán API.",
     "smsgatewayTo": "Uimhir(í) Teileafóin",
-    "smsgatewayToHelptext": "Liosta uimhreacha gutháin faighteoirí i bhformáid idirnáisiúnta, scartha le camóga (m.sh. +15551234567)"
+    "smsgatewayToHelptext": "Liosta uimhreacha gutháin faighteoirí i bhformáid idirnáisiúnta, scartha le camóga (m.sh. +15551234567)",
+    "Time range": "Raon ama",
+    "customTimeRange": "Raon saincheaptha",
+    "Apply": "Cuir i bhfeidhm",
+    "invalidTimeRange": "Caithfidh an t-am deiridh a bheith i ndiaidh an ama tosaigh.",
+    "Degraded": "Díghrádaithe"
 }

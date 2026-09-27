@@ -1709,5 +1709,10 @@
     "notifyAppDeviceIdDescription": "ID del dispositivo dall'app Notify! oppure un ID di gruppo per inviare una notifica a tutti i dispositivi di un gruppo contemporaneamente.",
     "notifyAppSetup": "Apri Notify! e trova l'ID del dispositivo e il token in Impostazioni. Non è necessario alcun account. Scopri di più su {0}.",
     "Client Key": "Chiave client",
-    "Channel": "Canale"
+    "Channel": "Canale",
+    "Time range": "Intervallo di tempo",
+    "customTimeRange": "Intervallo personalizzato",
+    "Apply": "Applica",
+    "invalidTimeRange": "L'ora di fine deve essere successiva all'ora di inizio.",
+    "Degraded": "Degradato"
 }
